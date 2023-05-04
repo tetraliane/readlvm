@@ -23,11 +23,11 @@ for arg in sys.argv[1:]:
         src_filename = arg
 
     else:
-        sys.stderr.write(f"Unknown argument: {arg}")
+        sys.stderr.write(f"Unknown argument: {arg}\n")
         sys.exit(1)
 
 if src_filename == None:
-    sys.stderr.write("LVM file is not given.")
+    sys.stderr.write("LVM file is not given.\n")
     sys.exit(1)
 
 lvm = LvmData.read(src_filename)

@@ -2,11 +2,42 @@ import sys
 import yaml
 from . import LvmData
 
-[src_filename, pick_col_ind] = sys.argv[1].split(":")
-out_filename = sys.argv[2]
+encoding = "utf-8"
+cols = None
+compress_col = None
+src_filename = None
+
+for arg in sys.argv[1:]:
+    if arg.startswith("-e="):
+        encoding = arg[len("-e=") :]
+    elif arg.startswith("--encoding="):
+        encoding = arg[len("--encoding=") :]
+
+    elif arg.startswith("-c="):
+        cols_str = arg[len("-c=") :].split(",")
+        cols = list(map(lambda i: int(i) - 1, cols_str))
+    elif arg.startswith("--columns="):
+        cols_str = arg[len("-c=") :].split(",")
+        cols = list(map(lambda i: int(i) - 1, cols_str))
+
+    elif arg.startswith("--compress="):
+        compress_col = int(arg[len("--compress=") :]) - 1
+
+    elif src_filename == None:
+        src_filename = arg
+
+    else:
+        sys.stderr.write(f"Unknown argument: {arg}")
+        sys.exit(1)
+
+if src_filename == None:
+    sys.stderr.write("LVM file is not given.")
+    sys.exit(1)
 
 lvm = LvmData.read(src_filename)
-compressed = lvm.compress_data(int(pick_col_ind) - 1)
+if cols != None:
+    lvm.pick_cols(cols)
+if compress_col != None:
+    lvm.compress_data(compress_col)
 
-with open(out_filename, "w") as f:
-    yaml.dump(compressed.into_yaml(), f, allow_unicode=True)
+yaml.dump(lvm.into_yaml(), sys.stdout, allow_unicode=True)

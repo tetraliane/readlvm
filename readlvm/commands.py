@@ -9,10 +9,11 @@ from . import LvmData
 def main(encoding: str, columns: str, src_filename: str) -> int:
     cols = None
     if len(columns) > 0:
-        cols = columns.split(",")
+        cols = list(map(lambda c: int(c) - 1, columns.split(",")))
 
     try:
-        lvm = LvmData.read(src_filename)
+        with click.open_file(src_filename, "r", encoding=encoding) as f:
+            lvm = LvmData.read(f)
     except Exception as e:
         click.echo(f"{e}\n", err=True)
         return 1
@@ -29,7 +30,7 @@ def main(encoding: str, columns: str, src_filename: str) -> int:
             )
             return 1
 
-    with click.open_file("-", "r") as stdout:
+    with click.open_file("-", "w") as stdout:
         yaml.dump(lvm.into_yaml(), stdout, allow_unicode=True)
 
     return 0

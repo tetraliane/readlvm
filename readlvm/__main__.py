@@ -6,7 +6,7 @@ from . import LvmData
 out_filename = sys.argv[2]
 
 lvm = LvmData.read(src_filename)
-lvm.compress_data(int(pick_col_ind) - 1)
+compressed = lvm.compress_data(int(pick_col_ind) - 1)
 
 with open(out_filename, "w") as f:
-    yaml.dump(lvm.into_yaml(), f)
+    yaml.dump(compressed.into_yaml(), f, allow_unicode=True)

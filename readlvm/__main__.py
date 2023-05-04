@@ -30,8 +30,21 @@ if src_filename == None:
     sys.stderr.write("LVM file is not given.\n")
     sys.exit(1)
 
-lvm = LvmData.read(src_filename)
+try:
+    lvm = LvmData.read(src_filename)
+except Exception as e:
+    sys.stderr.write(f"{e}\n")
+    sys.exit(1)
+
 if cols != None:
-    lvm.pick_cols(cols)
+    try:
+        lvm.pick_cols(cols)
+    except IndexError as e:
+        sys.stderr.write(
+            "There are only {} columns but the given index is {}.\n".format(
+                len(lvm.data_labels()), max(cols) + 1
+            )
+        )
+        sys.exit(1)
 
 yaml.dump(lvm.into_yaml(), sys.stdout, allow_unicode=True)

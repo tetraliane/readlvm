@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import IO
 
 
 class LvmData:
@@ -22,42 +23,42 @@ class LvmData:
         self._data = data
 
     @classmethod
-    def read(cls, filename: str) -> LvmData:
+    def read(cls, stream: IO) -> LvmData:
         ins = cls("", dict(), [], [])
-        with open(filename) as f:
-            ins._title = f.readline().strip()
 
-            # ヘッダーとデータラベルを読み取る。
-            data_count = 0
-            while True:
-                line = f.readline()
-                if line.startswith("***"):
-                    continue
-                if len(line.strip()) == 0:
-                    continue
+        ins._title = stream.readline().strip()
 
-                spl = line.split()
-                if len(spl) == 2:
-                    ins._header[spl[0]] = spl[1]
-                else:
-                    ins._data_labels = spl
-                    data_count = len(spl)
-                    break
+        # ヘッダーとデータラベルを読み取る。
+        data_count = 0
+        while True:
+            line = stream.readline()
+            if line.startswith("***"):
+                continue
+            if len(line.strip()) == 0:
+                continue
 
-            # データを読み取る。
-            for line in f:
-                if line.startswith("***"):
-                    continue
-                if len(line.strip()) == 0:
-                    continue
+            spl = line.split()
+            if len(spl) == 2:
+                ins._header[spl[0]] = spl[1]
+            else:
+                ins._data_labels = spl
+                data_count = len(spl)
+                break
 
-                # 先頭が省略されて空白になっているのを検出するため、先頭に文字を入れてから分割する。
-                spl = ("^" + line).split()
-                spl[0] = spl[0][1:]
-                # 末尾を空白を埋める。
-                spl += [""] * max(data_count - len(spl), 0)
+        # データを読み取る。
+        for line in stream:
+            if line.startswith("***"):
+                continue
+            if len(line.strip()) == 0:
+                continue
 
-                ins._data.append(spl)
+            # 先頭が省略されて空白になっているのを検出するため、先頭に文字を入れてから分割する。
+            spl = ("^" + line).split()
+            spl[0] = spl[0][1:]
+            # 末尾を空白を埋める。
+            spl += [""] * max(data_count - len(spl), 0)
+
+            ins._data.append(spl)
 
         return ins
 

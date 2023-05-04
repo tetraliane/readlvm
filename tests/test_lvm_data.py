@@ -15,7 +15,8 @@ class TestUnitTest(unittest.TestCase):
         self.assertEqual(yaml["data"], [["0", "2"], ["1", "3"]])
 
     def test_should_read_lvm_file(self):
-        lvm = LvmData.read("tests/test_normal.lvm")
+        with open("tests/test_normal.lvm", "r") as f:
+            lvm = LvmData.read(f)
         self.assertEqual(lvm.title(), "Test 1")
         self.assertEqual(
             lvm.header(), {"Date": "2020/01/01", "Time": "12:34:56.7802109249124236187"}
@@ -26,7 +27,8 @@ class TestUnitTest(unittest.TestCase):
         )
 
     def test_lvm_file_may_lack_some_data(self):
-        lvm = LvmData.read("tests/test_with_lack.lvm")
+        with open("tests/test_with_lack.lvm", "r") as f:
+            lvm = LvmData.read(f)
         self.assertEqual(lvm.title(), "Test 1")
         self.assertEqual(
             lvm.header(), {"Date": "2020/01/01", "Time": "12:34:56.7802109249124236187"}
@@ -35,7 +37,8 @@ class TestUnitTest(unittest.TestCase):
         self.assertEqual(lvm.data(), [["", "1", "1"], ["1", "2", ""], ["", "4", ""]])
 
     def test_lvm_file_may_contain_comments(self):
-        lvm = LvmData.read("tests/test_comment.lvm")
+        with open("tests/test_comment.lvm", "r") as f:
+            lvm = LvmData.read(f)
         self.assertEqual(lvm.title(), "Test 1")
         self.assertEqual(
             lvm.header(), {"Date": "2020/01/01", "Time": "12:34:56.7802109249124236187"}
@@ -46,7 +49,8 @@ class TestUnitTest(unittest.TestCase):
         )
 
     def test_lvm_file_may_empty_lines(self):
-        lvm = LvmData.read("tests/test_empty_line.lvm")
+        with open("tests/test_empty_line.lvm", "r") as f:
+            lvm = LvmData.read(f)
         self.assertEqual(lvm.title(), "Test 1")
         self.assertEqual(
             lvm.header(), {"Date": "2020/01/01", "Time": "12:34:56.7802109249124236187"}

@@ -55,3 +55,14 @@ class TestUnitTest(unittest.TestCase):
         self.assertEqual(
             lvm.data(), [["0", "1", "1"], ["1", "2", "4"], ["2", "4", "16"]]
         )
+
+    def test_pick_up_columns(self):
+        lvm = LvmData(
+            "Test title",
+            {"Date": "2020/01/01"},
+            ["index", "x", "y"],
+            [["0", "2", "4"], ["1", "3", "8"]],
+        )
+        lvm.pick_cols([0, 2])
+        self.assertEqual(lvm.data_labels(), ["index", "y"])
+        self.assertEqual(lvm.data(), [["0", "4"], ["1", "8"]])

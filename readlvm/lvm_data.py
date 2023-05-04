@@ -85,3 +85,8 @@ class LvmData:
             "data_labels": self.data_labels(),
             "data": self.data(),
         }
+
+    def pick_cols(self, cols: list[int]) -> None:
+        self._data_labels = [self._data_labels[c] for c in cols]
+        for i in range(len(self._data)):
+            self._data[i] = [self._data[i][c] for c in cols]

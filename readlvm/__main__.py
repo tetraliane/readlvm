@@ -4,7 +4,6 @@ from . import LvmData
 
 encoding = "utf-8"
 cols = None
-compress_col = None
 src_filename = None
 
 for arg in sys.argv[1:]:
@@ -20,9 +19,6 @@ for arg in sys.argv[1:]:
         cols_str = arg[len("-c=") :].split(",")
         cols = list(map(lambda i: int(i) - 1, cols_str))
 
-    elif arg.startswith("--compress="):
-        compress_col = int(arg[len("--compress=") :]) - 1
-
     elif src_filename == None:
         src_filename = arg
 
@@ -37,7 +33,5 @@ if src_filename == None:
 lvm = LvmData.read(src_filename)
 if cols != None:
     lvm.pick_cols(cols)
-if compress_col != None:
-    lvm.compress_data(compress_col)
 
 yaml.dump(lvm.into_yaml(), sys.stdout, allow_unicode=True)

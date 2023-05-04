@@ -55,21 +55,3 @@ class TestUnitTest(unittest.TestCase):
         self.assertEqual(
             lvm.data(), [["0", "1", "1"], ["1", "2", "4"], ["2", "4", "16"]]
         )
-
-    def test_pick_up_single_row_and_compress_it(self):
-        lvm = LvmData(
-            "Test title",
-            {"Date": "2020/01/01"},
-            ["index", "x", "y"],
-            [
-                ["0", "0", "2"],
-                ["1", "1", "3"],
-                ["2", "1", "4"],
-                ["3", "2", "5"],
-                ["4", "3", "6"],
-            ],
-        )
-
-        compressed = lvm.compress_data(1)
-        self.assertEqual(compressed.data_labels(), ["x", "count_of_x"])
-        self.assertEqual(compressed.data(), [["0", 1], ["1", 2], ["2", 1], ["3", 1]])

@@ -85,18 +85,3 @@ class LvmData:
             "data_labels": self.data_labels(),
             "data": self.data(),
         }
-
-    def compress_data(self, col_index: int) -> LvmData:
-        label = self.data_labels()[col_index]
-        out = LvmData(self.title(), self.header(), [label, "count_of_" + label], [])
-
-        begin = 0
-        for i in range(1, len(self._data)):
-            prev = self._data[i - 1][col_index]
-            current = self._data[i][col_index]
-            if prev != current:
-                out._data.append([prev, i - begin])
-                begin = i
-        out._data.append([self._data[-1][col_index], len(self._data) - begin])
-
-        return out

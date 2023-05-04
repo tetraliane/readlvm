@@ -67,14 +67,14 @@ class LvmData:
         return self._title
 
     def header(self) -> dict[str, str]:
-        return self._header.copy()
+        return self._header
 
     def data_labels(self) -> list[str]:
-        return self._data_labels.copy()
+        return self._data_labels
 
     def data(self) -> list[list[str]]:
         # Deepcopy the data
-        return list(map(lambda row: row.copy(), self._data))
+        return self._data
 
     # other methods
 
